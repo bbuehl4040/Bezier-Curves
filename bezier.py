@@ -26,19 +26,40 @@ def get_coord(t, points=[]):
 
     return point
 
+def get_graph(t, start_t, end_t, val_1, val_2, ease_out, ease_in):
+    dur = end_t - start_t                               # duration of animation
+    completion = (t - start_t) / dur                    # % through animation
+    if t < start_t:
+        return [(t, val_1)]
+    if t > end_t:
+        return [(t, val_2)]
+    p1 = (start_t, val_1)                               # starting point
+    p2 = (start_t + (dur * ease_out), val_1)            # bezier handle - ease out
+    p3 = (start_t + (dur *  (1 - ease_in)), val_2)      # bezier handle - ease in
+    p4 = (end_t, val_2)                                 # end point
+
+    print(p1, p2, p3, p4)
+    return get_coord(completion, [p1, p2, p3, p4])
+    
+
 
 if __name__ == '__main__':
     print('\noutput: \n')
 
-    points = [(0,0), (3.33,0), (0, 10), (10,10)]
+    points = [(0,0), (0,0), (0, 1), (10,1)]
     x_positions = []
     y_positions = []
-    times = [0, .1, .2, .3, .4, .5, .6, .7, .8, .9, 1]
-
-    for t in times:
-        coord = get_coord(t, points)[0]
+    times = [0, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 10]
+    p = 10
+    # for i in range(p+1):
+    #     t = round(((1/p) * i), 1) 
+    for i in times:
+        t = i
+        #coord = get_coord(t, points)[0]
+        coord = get_graph(t, 2, 7, 10, 20, .5, .1)[0]
         x_positions.append(coord[0])
         y_positions.append(coord[1])
+        print(f't: {t}, X: {round(coord[0], 2)} | Y: {round(coord[1], 2)}')
 
     plt.plot(x_positions, y_positions)
     plt.title("stupid curve")
